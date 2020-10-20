@@ -7,8 +7,9 @@ function getRandomInt(max) {
 /**
  * Super-cool custom business rules would go here.
  * We will use a Super-fake substitute by
- * randomly doing one of three things:
- *    return discount 1, return discount 2 or
+ * randomly doing one of four things:
+ *    return discount 1, return discount 2,
+ *    return both discounts or
  *    return null (no discount applied)
  */
 const getDiscountForCart = () => {
