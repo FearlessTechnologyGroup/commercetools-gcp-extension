@@ -15,7 +15,7 @@ const getDiscountForCart = () => {
   const DISCOUNT_CODE_1 = '5%-OFF-ALL-LINE-ITEMS';
   const DISCOUNT_CODE_2 = '$5-OFF-YOUR-CART';
 
-  switch (getRandomInt(3)) {
+  switch (getRandomInt(4)) {
     case 1: // apply discount code 1
       return {
         actions: [
@@ -28,6 +28,19 @@ const getDiscountForCart = () => {
     case 2: // apply discount code 2
       return {
         actions: [
+          {
+            action: 'addDiscountCode',
+            code: DISCOUNT_CODE_2,
+          }
+        ]
+      };
+    case 3: // apply both discounts
+      return {
+        actions: [
+          {
+            action: 'addDiscountCode',
+            code: DISCOUNT_CODE_1,
+          },
           {
             action: 'addDiscountCode',
             code: DISCOUNT_CODE_2,
@@ -50,18 +63,20 @@ const getDiscountForCart = () => {
 exports.applyCartDiscount = (req, res) => {
   // req.body should contain a commercetools Input object
   // req.body.resource should contain a cart
-  // in place of input validation, we will just safely destructure
-  // for this example
+  // in place of input validation, we will
+  // 1. safely destructure req to find the cart object
   const { body } = req || {};
   const { resource } = body || {};
   const { typeId, obj: cart } = resource || {};
 
   if (typeId === 'cart' && cart) {
+    // 2. run our custom business logic to assign a discount
     const discountAction = getDiscountForCart(cart);
 
-    // log messages can be seen in GCP's Log Explorer
+    // 3. log messages can be seen in GCP's Log Explorer
     console.log(JSON.stringify(discountAction));
 
+    // 4. respond with a discount action
     if (!discountAction) {
       res.status(200).end(); // no discount to apply
     } else {
